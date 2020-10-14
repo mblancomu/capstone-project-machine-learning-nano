@@ -1,20 +1,31 @@
 [//]: # (Image References)
 
-[image1]: ./images/sample_dog_output.png "Sample Output"
-[image2]: ./images/vgg16_model.png "VGG-16 Model Layers"
+[image1]: ./images/example_face.png "Sample Face"
+[image2]: ./images/sample_human_output.png "Sample Human"
 [image3]: ./images/vgg16_model_draw.png "VGG16 Model Figure"
 
+## CNN Project: Dog Breed Classifier
+
+This repository contains the final project of Udacity's Machine Learning Nanodegree, which is a Dog breed classifier. A Convolutional Neural Networks (CNN) and transfer learning in PyTorch was used to carry out the model.
 
 ## Project Overview
 
-Welcome to the Convolutional Neural Networks (CNN) project in the AI Nanodegree! In this project, you will learn how to build a pipeline that can be used within a web or mobile app to process real-world, user-supplied images.  Given an image of a dog, your algorithm will identify an estimate of the canine’s breed.  If supplied an image of a human, the code will identify the resembling dog breed.  
+In this project, a machine learning model will be made that can be used both on a website and in a mobile app, where a series of images contributed by the user from the real world will be processed. The algorithm used will perform three tasks:
 
-![Sample Output][image1]
+   - By providing the user with an image of a dog, the algorithm will identify the breed to which it belongs, giving an estimate.
+   - If the image is of a human, the algorithm will identify the closest breed of dog.
+   - In the event that the image is not of a dog or human, the model will throw an error informing us that the image is invalid.
 
-Along with exploring state-of-the-art CNN models for classification and localization, you will make important design decisions about the user experience for your app.  Our goal is that by completing this lab, you understand the challenges involved in piecing together a series of models designed to perform various tasks in a data processing pipeline.  Each model has its strengths and weaknesses, and engineering a real-world application often involves solving many problems without a perfect answer.  Your imperfect solution will nonetheless create a fun user experience!
+As it is a multiclass classification (we have several classes that the dog or the human race can belong to), it is best to use a Convolutional Neural Network to solve the problem. To do this, we must follow three steps:
+
+   - We will detect human images using existing algorithms such as OpenCV’s implementation of Haar feature based cascade classifiers.
+   - To detect the dog images, we will use a pretrained VGG16 model.
+   - Finally, once the image is identified as dog or human, we will pass it to a CNN model, which will process the image and make a prediction of the breed to    which it belongs out of the 133 available.
 
 
 ## Project Instructions
+
+This project belongs to the Nanodegree of Machine Learning of Udacity. Despite the fact that it is a finished project, it is possible to do it from scratch, including the extra images added in this project, following these steps:
 
 ### Instructions
 
@@ -29,8 +40,9 @@ __NOTE:__ if you are using the Udacity workspace, you *DO NOT* need to re-downlo
 
 2. Download the [dog dataset](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip).  Unzip the folder and place it in the repo, at location `path/to/dog-project/dogImages`.  The `dogImages/` folder should contain 133 folders, each corresponding to a different dog breed.
 3. Download the [human dataset](http://vis-www.cs.umass.edu/lfw/lfw.tgz).  Unzip the folder and place it in the repo, at location `path/to/dog-project/lfw`.  If you are using a Windows machine, you are encouraged to use [7zip](http://www.7-zip.org/) to extract the folder. 
-4. Make sure you have already installed the necessary Python packages according to the README in the program repository.
-5. Open a terminal window and navigate to the project folder. Open the notebook and follow the instructions.
+4. Download the test_images that are included in this repository.
+5. Make sure you have already installed the necessary Python packages according to the README in the program repository.
+6. Open a terminal window and navigate to the project folder. Open the notebook and follow the instructions.
 	
 	```
 		jupyter notebook dog_app.ipynb
@@ -38,31 +50,48 @@ __NOTE:__ if you are using the Udacity workspace, you *DO NOT* need to re-downlo
 
 __NOTE:__ While some code has already been implemented to get you started, you will need to implement additional functionality to successfully answer all of the questions included in the notebook. __Unless requested, do not modify code that has already been included.__
 
-__NOTE:__ In the notebook, you will need to train CNNs in PyTorch.  If your CNN is taking too long to train, feel free to pursue one of the options under the section __Accelerating the Training Process__ below.
+__NOTE:__ Amazon SageMaker has been used to carry out this project. Although it is not mandatory, it would be recommended to use said platform, in order to obtain similar results, as well as to facilitate the work, when using other tools on this platform.
 
 
+## Detect Humans
 
-## (Optionally) Accelerating the Training Process 
+Once the datasets are downloaded and analyzed, the first thing we are going to do is implement the logic to detect humans in the images, we use OpenCV's implementation of Haar feature-based cascade classifiers for this purpose.
 
-If your code is taking too long to run, you will need to either reduce the complexity of your chosen CNN architecture or switch to running your code on a GPU.  If you'd like to use a GPU, you can spin up an instance of your own:
+OpenCV provides many pre-trained face detectors, we can see an example in the following image:
 
-#### Amazon Web Services
+![Sample Face][image1]
 
-You can use Amazon Web Services to launch an EC2 GPU instance. (This costs money, but enrolled students should see a coupon code in their student `resources`.)
+To analyze the operation of OpenCV with our images, and see how little failure it is, we are going to write a human face detector, where we will obtain values close to 100% correctness.
 
-## Evaluation
+## Detect Dogs
 
-Your project will be reviewed by a Udacity reviewer against the CNN project rubric.  Review this rubric thoroughly and self-evaluate your project before submission.  All criteria found in the rubric must meet specifications for you to pass.
+As before with humans, we use a pre-trained model to detect dogs in images, in this case a VGG-16 model. This pre-trained VGG-16 model returns a prediction for the object that is contained in the image.
+
+We are going to make predictions with the Pre-trained model, in order to see its effectiveness, and then write a dog detector. In order to check to see if an image is predicted to contain a dog by the pre-trained VGG-16 model, we need only check if the pre-trained model predicts an index between 151 and 268 (inclusive).
+
+In the same way as with the human detector, when analyzing our images, we see with the model it is capable of identifying dogs with a low percentage of incorrect classifications.
+
+## Create a CNN to Classify Dog Breeds (from Scratch)
+
+To solve the multiclass classification problem (races), a CNN model has been built from scratch. This model has 3 convolutional layers with a kernel size of 3 and stride 1. The first conv layer (conv1) takes the 224*224 input image and the final conv layer(conv3) produces an output size of 128.
+I used the ReLU activation function and I used the pooling layer of (2,2) in order to reduce the input size by 2. The dimensional out is 133, produced for the two fully connected layers that we have here. A dropout of 0.25 is added to avoid over overfitting. After creating a model, we train and test it to meet the specification of a test accuracy of at least 10%.
 
 
-## Project Submission
+## Create a CNN to Classify Dog Breeds (using Transfer Learning)
 
-Your submission should consist of the github link to your repository.  Your repository should contain:
-- The `dog_app.ipynb` file with fully functional code, all code cells executed and displaying output, and all questions answered.
-- An HTML or PDF export of the project notebook with the name `report.html` or `report.pdf`.
+Once an acceptable precision is obtained from the CNN that I have created from scratch, these results can be improved, for which we will use the transfer learning. Our CNN must attain at least 60% accuracy on the test set. 
+I will use Resnet101 architecture which is pre-trained on ImageNet dataset, the architecture is 101 layers deep. The last convolutional output of Resnet101 is fed as input to our model. We only need to add a fully connected layer to produce 133-dimensional output (one for each dog category). The model performed extremely well when compared to CNN from scratch. With just 5 epochs, the model got 81% accuracy.
 
-Please do __NOT__ include any of the project data sets provided in the `dogImages/` or `lfw/` folders.
 
-### Ready to submit your project?
+## Model Evaluation
 
-Click on the "Submit Project" button in the classroom and follow the instructions to submit!
+After training and validating the model, we will test it to see if it meets the 60% specification. In this case, the CNN model created using transfer learning with ResNet101 architecture was trained for 5 epochs, and the final model produced an accuracy of 81% on test data. The model correctly predicted breeds for 680 images out of 836 total images.
+
+
+## Write and test an Algorithm
+
+Finally, we will write an algorithm that accepts a file path to an image and first determines whether the image contains a human, dog, or neither. Some sample output for our algorithm is this image:
+
+![Sample Human][image2]
+
+Of course, this repository contains just one example of what could be done with more images and improving the fit of the model by playing with the hyperparameters. Feel free to perform the appropriate tests in order to obtain the desired results.
