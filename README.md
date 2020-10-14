@@ -70,9 +70,9 @@ As before with humans, we use a pre-trained model to detect dogs in images, in t
 
 We are going to make predictions with the Pre-trained model, in order to see its effectiveness, and then write a dog detector. In order to check to see if an image is predicted to contain a dog by the pre-trained VGG-16 model, we need only check if the pre-trained model predicts an index between 151 and 268 (inclusive).
 
-In the same way as with the human detector, when analyzing our images, we see with the model it is capable of identifying dogs with a low percentage of incorrect classifications. In the image a VGG-16 model:
+In the same way as with the human detector, when analyzing our images, we see with the model it is capable of identifying dogs with a low percentage of incorrect classifications. In the image a VGG-16 model(citation: https://neurohive.io/en/popular-networks/vgg16/):
 
-![VGG16 Model Figure][image3]   ![VGG-16 Model Layers][image4]
+![VGG16 Model Figure][image3]
 
 
 ## Create a CNN to Classify Dog Breeds (from Scratch)
@@ -98,6 +98,6 @@ After training and validating the model, we will test it to see if it meets the 
 
 Finally, we will write an algorithm that accepts a file path to an image and first determines whether the image contains a human, dog, or neither. Some sample output for our algorithm is this image:
 
-![Sample Human][image2]     ![Sample Dog][image5]
+![Sample Human][image2]                          ![Sample Dog][image5]
 
 Of course, this repository contains just one example of what could be done with more images and improving the fit of the model by playing with the hyperparameters. Feel free to perform the appropriate tests in order to obtain the desired results.
