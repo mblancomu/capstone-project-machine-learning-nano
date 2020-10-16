@@ -70,7 +70,7 @@ As before with humans, we use a pre-trained model to detect dogs in images, in t
 
 We are going to make predictions with the Pre-trained model, in order to see its effectiveness, and then write a dog detector. In order to check to see if an image is predicted to contain a dog by the pre-trained VGG-16 model, we need only check if the pre-trained model predicts an index between 151 and 268 (inclusive).
 
-In the same way as with the human detector, when analyzing our images, we see with the model it is capable of identifying dogs with a low percentage of incorrect classifications. In the image a VGG-16 model(citation: https://neurohive.io/en/popular-networks/vgg16/):
+In the same way as with the human detector, when analyzing our images, we see with the model it is capable of identifying dogs with a low percentage of incorrect classifications. In the image a VGG-16 model(source: https://neurohive.io/en/popular-networks/vgg16/):
 
 ![VGG16 Model Figure][image3]
 
@@ -86,12 +86,12 @@ I used the ReLU activation function and I used the pooling layer of (2,2) in ord
 ## Create a CNN to Classify Dog Breeds (using Transfer Learning)
 
 Once an acceptable precision is obtained from the CNN that I have created from scratch, these results can be improved, for which we will use the transfer learning. Our CNN must attain at least 60% accuracy on the test set. 
-I will use Resnet101 architecture which is pre-trained on ImageNet dataset, the architecture is 101 layers deep. The last convolutional output of Resnet101 is fed as input to our model. We only need to add a fully connected layer to produce 133-dimensional output (one for each dog category). The model performed extremely well when compared to CNN from scratch. With just 5 epochs, the model got 81% accuracy.
+I will use Resnet101 architecture which is pre-trained on ImageNet dataset, the architecture is 101 layers deep. The last convolutional output of Resnet101 is fed as input to our model. We only need to add a fully connected layer to produce 133-dimensional output (one for each dog category). The model performed extremely well when compared to CNN from scratch. With just 5 epochs, the model got 83% accuracy.
 
 
 ## Model Evaluation
 
-After training and validating the model, we will test it to see if it meets the 60% specification. In this case, the CNN model created using transfer learning with ResNet101 architecture was trained for 5 epochs, and the final model produced an accuracy of 81% on test data. The model correctly predicted breeds for 680 images out of 836 total images.
+After training and validating the model, we will test it to see if it meets the 60% specification. In this case, the CNN model created using transfer learning with ResNet101 architecture was trained for 5 epochs, and the final model produced an accuracy of 83% on test data. The model correctly predicted breeds for 695 images out of 836 total images.
 
 
 ## Write and test an Algorithm
@@ -101,3 +101,24 @@ Finally, we will write an algorithm that accepts a file path to an image and fir
 ![Sample Human][image2]                          ![Sample Dog][image5]
 
 Of course, this repository contains just one example of what could be done with more images and improving the fit of the model by playing with the hyperparameters. Feel free to perform the appropriate tests in order to obtain the desired results.
+
+## References
+
+https://github.com/udacity/deep-learning-v2-pytorch/tree/master/project-dog-classification
+
+https://en.wikipedia.org/wiki/Convolutional_neural_network
+
+https://www.kdnuggets.com/2018/04/right-metric-evaluating-machine-learning-models-1.html
+
+https://pytorch.org/docs/master/
+
+http://wiki.fast.ai/index.php/Log_Loss
+
+https://docs.opencv.org/master/db/d28/tutorial_cascade_classifier.html
+
+https://neurohive.io/en/popular-networks/vgg16/
+
+https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
+
+https://www.freeimages.com
+
